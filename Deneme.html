@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EyCode IDE</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+            box-sizing: border-box;
+            background-color: #f4f4f4;
+        }
+
+        /* Sol Panel: Editor Alanı */
+        #editorContainer {
+            width: 50%;
+            padding: 20px;
+            border-right: 1px solid #ccc;
+            background-color: #081a57;
+        }
+
+        /* Sağ Panel: Output Alanı */
+        #outputContainer {
+            width: 50%;
+            padding: 20px;
+            overflow-y: auto;
+            background-color: #081a57;
+            border-left: 3px solid #ccc;
+        }
+
+        /* Monaco Editor */
+        #editor {
+            height: 80vh;
+            width: 100%;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+        }
+
+        /* Çıktı Alanı */
+        #output {
+            background-color: #fff;
+            padding: 20px;
+            border: 1px solid #ccc;
+            margin-top: 20px;
+            min-height: 400px;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+			width: 500px
+        }
+
+        footer {
+            background-color: #000000;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+		h1 {
+		color: white;
+		}
+		h2 {
+		color: white;
+		}
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.38.0/min/vs/editor/editor.main.css">
+</head>
+<body>
+
+<!-- Sol Panel: Editor -->
+<div id="editorContainer">
+    <header>
+        <h1>HTML Kodunuzu Yazın!</h1>
+    </header>
+    <div id="editor"></div>
+</div>
+
+<!-- Sağ Panel: Output -->
+<div id="outputContainer">
+    <h2>Çıktı:</h2>
+    <iframe id="output" frameborder="0"></iframe>
+</div>
+
+<footer>
+    <p>EyCode IDE - 2024</p>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.38.0/min/vs/loader.js"></script>
+<script>
+    // Monaco Editor'u başlatıyoruz
+    require.config({ paths: { vs: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.38.0/min/vs' } });
+    require(['vs/editor/editor.main'], function () {
+        var editor = monaco.editor.create(document.getElementById('editor'), {
+            value: `<html>
+	<head>
+	
+	</head>
+		<body>
+		
+		</body>
+</html>`,
+            language: 'html',
+            theme: 'vs-light',
+        });
+
+        // Editor'de her değişiklikte otomatik olarak çalıştırma
+        editor.onDidChangeModelContent(function () {
+            updateOutput();
+        });
+
+    });
+
+    // Çıktı ekranını güncelleme fonksiyonu
+    function updateOutput() {
+        const code = monaco.editor.getModels()[0].getValue();
+        const iframe = document.getElementById('output');
+        const doc = iframe.contentDocument || iframe.contentWindow.document;
+
+        // Iframe içerisindeki HTML'yi güncelle
+        doc.open();
+        doc.write(code);
+        doc.close();
+    }
+</script>
+
+</body>
+</html>
